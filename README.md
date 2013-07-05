@@ -1,4 +1,5 @@
 Mediator Tagger POC example
+===========================
 
 This plugin converts a textbox to a tagging box using the mediator framework<br/>
 
@@ -8,7 +9,7 @@ JavaScript plugins that plug into any framework.<br/>
 This is achieved my decoupling the JavaScript framework of choice from the plugin logic<br/>
 in turn calling its parent framework via a mediator.<br/>
 
-The following tagging plugin supports the following JavaScript frameworks<br/>
+The example plugin (tagger) supports the following JavaScript frameworks<br/>
 using the javascript mediator framework (POC version)<br/>
 
 JQuery (1.9.1)<br/>
