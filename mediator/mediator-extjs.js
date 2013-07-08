@@ -67,22 +67,6 @@ var Mediator = MediatorInterface(
 	}
 );
 
-Ext.ns('Tagger');
-
-Tagger.MyPanel = function(config) {
-    Tagger.MyPanel.superclass.constructor.call(this, config);
-} 
-
-Ext.extend(Tagger.MyPanel, Ext.Panel, {
-    constructor : function(config) {
-		alert(config);
-        Tagger.MyPanel.superclass.constructor.apply(this, config);
-    },
-    initComponent : function() {
-		
-	}
-});
-
 Tagger.Init = function(Id) {
 	Tagger.call(Ext.get(Id));
 }
