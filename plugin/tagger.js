@@ -11,6 +11,7 @@ var Tagger = function() {
 		tagsElement.Html('');
 		Mediator.Elements('.tag.' + tagName).Event.Off();
 		for (var i = 0; i < tags.length; i++) {
+			tags[i] = Mediator.String.Trim(tags[i]);
 			tagsElement.Append('<span class="tag ' + tagName + '">' + tags[i] + '</span>');
 		}
 		if (!readOnly) {
