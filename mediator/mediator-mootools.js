@@ -1,69 +1,53 @@
-var Mediator = MediatorInterface(
-	{
-		ElementById : function(id) {
-			return Mediator.Element(document.id(id));
-		},
-		Elements : function(selector) {
-			return Mediator.Element($$(selector));
-		},
-		Element : function(element) {
-			var self = {
-				Append : function(obj) {
-					element.grab(new Element('span', {html:obj}));
-				},
-				Before : function(obj) {
-					element.grab(new Element('span', {html:obj}), 'before');
-				},
-				Hide : function() {
-					element.setStyle('visibility', 'hidden');
-				},
-				Html : function(value) {
-					if (typeof value === 'undefined') {
-						return element.get('html');
-					}
-					element.set('html', value);
-				},
-				Attribute : function(id) {
-					return element.get(id);
-				},
-				EventArgs : function(e) {
-					return {
-						Which : e.code,
-						Type : e.type
-					}
-				},
-				Event : {
-					On : function(eventName, eventCallback) {
-						element.addEvent(eventName, function(e) {
-							eventCallback.call(this, self.EventArgs(e));
-						});
-					},
-					Off : function() {
-						element.removeEvents();
-					}
-				},
-				Value : function(value) {
-					if (typeof value === 'undefined') {
-						return element.get('value');
-					}
-					element.set('value', value);
-				}
-			};
-			return self;
-		},
-		String : {
-			Trim : function(value) {
-				return value.trim();
-			}
-		},
-		Array : {
-			In : function(value, array) {
-				return array.indexOf(value);
-			}
-		}
+;(function(ER) {
+	$M.ById = function(id) {
+		return $M.El(document.id(id));
 	}
-);
-
+	$M.Sel = function(selector) {
+		return $M.El($$(selector));
+	}
+	ER.Append = function(obj) {
+		this.element.grab(new Element('span', {html:obj}));
+	}
+	ER.Before = function(obj) {
+		this.element.grab(new Element('span', {html:obj}), 'before');
+	}
+	ER.Hide = function() {
+		this.element.setStyle('visibility', 'hidden');
+	}
+	ER.Html = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.get('html');
+		}
+		this.element.set('html', value);
+	}
+	ER.Attribute = function(id) {
+		return this.element.get(id);
+	}
+	$M.EventArgs = function(e) {
+		this.Which = e.code;
+		this.Type = e.type;
+	}
+	ER.On = function(eventName, eventCallback) {
+		this.element.addEvent(eventName, function(e) {
+			eventCallback.call(this, new $M.EventArgs(e));
+		});
+	}
+	ER.Off = function() {
+		this.element.removeEvents();
+	}
+	ER.Value = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.get('value');
+		}
+		this.element.set('value', value);
+	}
+	$M.String.Trim = function(value) {
+		return value.trim();
+	}
+	$M.Array.In = function(value, array) {
+		return array.indexOf(value);
+	}
+}($M.ElementResult.prototype));
 Element.implement({
 	tagger: function(){
 		var tagger = Tagger.call(this);

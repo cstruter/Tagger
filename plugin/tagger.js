@@ -1,26 +1,26 @@
 var Tagger = function() {
 	var tags = [];
-	var element = Mediator.Element(this);
+	var element = $M.El(this);
 	var id = element.Attribute('id');
 	var tagName = id + '_tagger';
 	var tagsElementName = id + '_tags';
 	var readOnly = !!(element.Attribute('readonly'));
 
 	function CreateTags() {
-		var tagsElement = Mediator.ElementById(tagsElementName);
+		var tagsElement = $M.ById(tagsElementName);
 		tagsElement.Html('');
-		Mediator.Elements('.tag.' + tagName).Event.Off();
+		$M.Sel('.tag.' + tagName).Off();
 		for (var i = 0; i < tags.length; i++) {
-			tags[i] = Mediator.String.Trim(tags[i]);
+			tags[i] = $M.String.Trim(tags[i]);
 			tagsElement.Append('<span class="tag ' + tagName + '">' + tags[i] + '</span>');
 		}
 		if (!readOnly) {
-			Mediator.Elements('.tag.' + tagName).Event.On('click', function(e) {
-				var value = Mediator.Element(this).Html();
-				tags.splice(Mediator.Array.In(value, tags), 1);
+			$M.Sel('.tag.' + tagName).On('click', function(e) {
+				var value = $M.El(this).Html();
+				tags.splice($M.Array.In(value, tags), 1);
 				CreateTags();
 			});
-			Mediator.ElementById(id).Value(tags);
+			$M.ById(id).Value(tags);
 		}
 	}
 	
@@ -38,19 +38,19 @@ var Tagger = function() {
 	
 	element.Before('<input type="text" id="' + tagName + '" />');
 	
-	Mediator.ElementById(tagName).Event.On('keydown', function(e) {
-		var tagInputElement = Mediator.Element(this);
+	$M.ById(tagName).On('keydown', function(e) {
+		var tagInputElement = $M.El(this);
 		if ((e.Which == 8) && (tagInputElement.Value().length == 0)) {
 			tags.pop();
 			CreateTags();
 		}
 	});
 	
-	Mediator.ElementById(tagName).Event.On('keypress', function(e) {
-		var tagInputElement = Mediator.Element(this);
+	$M.ById(tagName).On('keypress', function(e) {
+		var tagInputElement = $M.El(this);
 		if (e.Which == 13) {
-			var value = Mediator.String.Trim(tagInputElement.Value().toLowerCase());
-			if ((value.length > 0) && (Mediator.Array.In(value, tags) == -1)) {
+			var value = $M.String.Trim(tagInputElement.Value().toLowerCase());
+			if ((value.length > 0) && ($M.Array.In(value, tags) == -1)) {
 				tags.push(value);
 				CreateTags();
 				tagInputElement.Value('');

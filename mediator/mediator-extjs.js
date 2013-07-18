@@ -1,72 +1,59 @@
-var Mediator = MediatorInterface(
-	{
-		ElementById : function(id) {
-			return Mediator.Element(Ext.get(id));
-		},
-		Elements : function(selector) {
-			return Mediator.Element(Ext.select(selector));
-		},
-		Element : function(element) {
-			if (typeof element.dom === 'undefined') {
-				element = Ext.get(element);
-			}
-			var self = {
-				Append : function(obj) {
-					Ext.DomHelper.insertHtml('beforeEnd', element.dom, obj);
-				},
-				Before : function(obj) {
-					Ext.DomHelper.insertHtml('beforeBegin', element.dom, obj);
-				},
-				Hide : function() {
-					element.hide();
-				},
-				Html : function(value) {
-					if (typeof value === 'undefined') {
-						return element.dom.innerHTML;
-					}
-					element.dom.innerHTML = value;
-				},
-				Attribute : function(id) {
-					return element.getAttribute(id);
-				},
-				EventArgs : function(e) {
-					return {
-						Which : e.keyCode,
-						Type : e.type
-					}
-				},
-				Event : {
-					On : function(eventName, eventCallback) {
-						element.on(eventName, function(e) {
-							eventCallback.call(this, self.EventArgs(e));
-						});
-					},
-					Off : function() {
-						element.un();
-					}
-				},
-				Value : function(value) {
-					if (typeof value === 'undefined') {
-						return element.dom.value;
-					}
-					element.dom.value = value;
-				}
-			};
-			return self;
-		},
-		String : {
-			Trim : function(value) {
-				return Ext.util.Format.trim(value);
-			}
-		},
-		Array : {
-			In : function(value, array) {
-				return array.indexOf(value);
-			}
-		}
+;(function(ER) {
+	$M.ById = function(id) {
+		return $M.El(Ext.get(id));
 	}
-);
-
+	$M.Sel = function(selector) {
+		return $M.El(Ext.select(selector));
+	}
+	$M.El = function(element) {
+		if (typeof element.dom === 'undefined') {
+			element = Ext.get(element);
+		}
+		return new $M.ElementResult(element);	
+	}
+	ER.Append = function(obj) {
+		Ext.DomHelper.insertHtml('beforeEnd', this.element.dom, obj);
+	}
+	ER.Before = function(obj) {
+		Ext.DomHelper.insertHtml('beforeBegin', this.element.dom, obj);
+	}
+	ER.Hide = function() {
+		this.element.hide();
+	}
+	ER.Html = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.dom.innerHTML;
+		}
+		this.element.dom.innerHTML = value;
+	}
+	ER.Attribute = function(id) {
+		return this.element.getAttribute(id);
+	}
+	$M.EventArgs = function(e) {
+		this.Which = e.keyCode;
+		this.Type = e.type;
+	}
+	ER.On = function(eventName, eventCallback) {
+		this.element.on(eventName, function(e) {
+			eventCallback.call(this, new $M.EventArgs(e));
+		});
+	}
+	ER.Off = function() {
+		this.element.un();
+	}
+	ER.Value = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.dom.value;
+		}
+		this.element.dom.value = value;
+	}	
+	$M.String.Trim = function(value) {
+		return Ext.util.Format.trim(value);
+	}
+	$M.Array.In = function(value, array) {
+		return array.indexOf(value);
+	}
+}($M.ElementResult.prototype));
 Tagger.Init = function(Id) {
 	Tagger.call(Ext.get(Id));
 }

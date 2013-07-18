@@ -1,82 +1,59 @@
-var Mediator = null;
 YUI().use('node', function (Y) {
-
-	Mediator = MediatorInterface(
-		{
-			ElementById : function(id) {
-				return Mediator.Element(Y.one('#' + id));
-			},
-			Elements : function(selector) {
-				return Mediator.Element(Y.all(selector));
-			},
-			Element : function(element) {
-				var self = {
-					Append : function(obj) {
-						element.append(obj);
-					},
-					Before : function(obj) {
-						obj = Y.Node.create(obj);
-						Y.one('body').insert(obj, element);
-					},
-					Hide : function() {
-						element.hide();
-					},
-					Html : function(value) {
-						if (typeof value === 'undefined') {
-							return element.getContent();
-						}
-						element.setContent(value);
-					},
-					Attribute : function(id) {
-						return element.getAttribute(id);
-					},
-					EventArgs : function(e) {
-						return {
-							Which : e.which,
-							Type : e.type
-						}
-					},
-					Event : {
-						On : function(eventName, eventCallback) {
-							if (typeof element.size === 'undefined') {
-								element.on(eventName, function(e) {
-									eventCallback.call(this, self.EventArgs(e));
-								});
-							} else {
-								element.each(function (node, index) {
-									node.on(eventName, function(e){
-										eventCallback.call(this, self.EventArgs(e));
-									});
-								});
-							}
-						},
-						Off : function() {
-							element.detach();
-						}
-					},
-					Value : function(value) {
-						if (typeof value === 'undefined') {
-							return element.get('value');
-						}
-						element.set('value', value);
-					}
-				};
-				return self;
-			},
-			String : {
-				Trim : function(value) {
-					return Y.Lang.trim(value);
-				}
-			},
-			Array : {
-				In : function(value, array) {
-					return Y.Array.indexOf(array, value);
-				}
-			}
+	var ER = $M.ElementResult.prototype;
+	$M.ById = function(id) {
+		return $M.El(Y.one('#' + id));
+	}
+	$M.Sel = function(selector) {
+		return $M.El(Y.all(selector));
+	}
+	ER.Append = function(obj) {
+		this.element.append(obj);
+	}
+	ER.Before = function(obj) {
+		obj = Y.Node.create(obj);
+		Y.one('body').insert(obj, this.element);
+	}
+	ER.Hide = function() {
+		this.element.hide();
+	}
+	ER.Html = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.getContent();
 		}
-	);
+		this.element.setContent(value);
+	}
+	ER.Attribute = function(id) {
+		return this.element.getAttribute(id);
+	}
+	ER.On = function(eventName, eventCallback) {
+		if (typeof this.element.size === 'undefined') {
+			this.element.on(eventName, function(e) {
+				eventCallback.call(this, new $M.EventArgs(e));
+			});
+		} else {
+			this.element.each(function (node, index) {
+				node.on(eventName, function(e){
+					eventCallback.call(this, new $M.EventArgs(e));
+				});
+			});
+		}
+	}
+	ER.Off = function() {
+		this.element.detach();
+	}
+	ER.Value = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.get('value');
+		}
+		this.element.set('value', value);
+	}
+	$M.String.Trim = function(value) {
+		return Y.Lang.trim(value);
+	}
+	$M.Array.In = function(value, array) {
+		return Y.Array.indexOf(array, value);
+	}
 });
-
 YUI.add('tagger', function(Y) {
 
 	Y.tagger = function(element) {

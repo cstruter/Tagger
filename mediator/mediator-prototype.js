@@ -1,84 +1,67 @@
-var Mediator = MediatorInterface(
-	{
-		ElementById : function(id) {
-			return Mediator.Element($(id));
-		},
-		Elements : function(selector) {
-			return Mediator.Element($$(selector));
-		},
-		Element : function(element) {
-			var self = {
-				Append : function(obj) {
-					element.insert(obj);
-				},
-				Before : function(obj) {
-					element.insert({before:obj});
-				},
-				Hide : function() {
-					element.hide();
-				},
-				Html : function(value) {
-					if (typeof value === 'undefined') {
-						return element.innerHTML;
-					}
-					element.innerHTML = value;
-				},
-				Attribute : function(id) {
-					return element.readAttribute(id);
-				},
-				EventArgs : function(e) {
-					return {
-						Which : (event.which || event.keyCode),
-						Type : e.type
-					}
-				},
-				Event : {
-					On : function(eventName, eventCallback) {
-						
-						if (typeof element.each !== 'undefined') {
-							element.each(function(sender) {
-								sender.observe(eventName, function(e) {
-									eventCallback.call(this, self.EventArgs(e));
-								});
-							});
-						} else {
-							element.observe(eventName, function(e) {
-								eventCallback.call(this, self.EventArgs(e));
-							});
-						}
-					},
-					Off : function() {
-						if (typeof element.each !== 'undefined') {
-							element.each(function(sender) {
-								sender.stopObserving();
-							});
-						} else if (typeof element.stopObserving !== 'undefined') {
-							element.stopObserving();
-						}
-					}
-				},
-				Value : function(value) {
-					if (typeof value === 'undefined') {
-						return element.value;
-					}
-					element.value = value;
-				}
-			};
-			return self;
-		},
-		String : {
-			Trim : function(value) {
-				return value.strip();
-			}
-		},
-		Array : {
-			In : function(value, array) {
-				return array.indexOf(value);
-			}
+;(function(ER) {
+	$M.ById = function(id) {
+		return $M.El($(id));
+	}
+	$M.Sel = function(selector) {
+		return $M.El($$(selector));
+	}
+	ER.Append = function(obj) {
+		this.element.insert(obj);
+	}
+	ER.Before = function(obj) {
+		this.element.insert({before:obj});
+	}
+	ER.Hide = function() {
+		this.element.hide();
+	}
+	ER.Html = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.innerHTML;
+		}
+		this.element.innerHTML = value;
+	}
+	ER.Attribute = function(id) {
+		return this.element.readAttribute(id);
+	}
+	$M.EventArgs = function(e) {
+		this.Which = (event.which || event.keyCode);
+		this.Type = e.type;
+	}
+	ER.On = function(eventName, eventCallback) {
+		if (typeof this.element.each !== 'undefined') {
+			this.element.each(function(sender) {
+				sender.observe(eventName, function(e) {
+					eventCallback.call(this, new $M.EventArgs(e));
+				});
+			});
+		} else {
+			this.element.observe(eventName, function(e) {
+				eventCallback.call(this, new $M.EventArgs(e));
+			});
 		}
 	}
-);
-
+	ER.Off = function() {
+		if (typeof this.element.each !== 'undefined') {
+			this.element.each(function(sender) {
+				sender.stopObserving();
+			});
+		} else if (typeof this.element.stopObserving !== 'undefined') {
+			this.element.stopObserving();
+		}
+	}
+	ER.Value = function(value) {
+		if (typeof value === 'undefined') {
+			return this.element.value;
+		}
+		this.element.value = value;
+	}
+	$M.String.Trim = function(value) {
+		return value.strip();
+	}
+	$M.Array.In = function(value, array) {
+		return array.indexOf(value);
+	}
+}($M.ElementResult.prototype));
 var TaggerBase = Tagger;
 var Tagger = Class.create(
 	{
